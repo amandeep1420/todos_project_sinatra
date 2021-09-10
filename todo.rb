@@ -25,17 +25,17 @@ get '/lists' do
   erb :lists, layout: :layout
 end
 
+# Render the new list form
+get '/lists/new' do
+  erb :new_list, layout: :layout
+end
+
 # View an existing todo list
 get '/lists/:id' do
   id    = params[:id].to_i
   @list = session[:lists][id]
   
   erb :list, layout: :layout
-end
-
-# Render the new list form
-get '/lists/new' do
-  erb :new_list, layout: :layout
 end
 
 # Edit an existing todo list
