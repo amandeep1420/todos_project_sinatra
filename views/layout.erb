@@ -26,6 +26,12 @@
         <p><%= session.delete(:error) %></p>
       </div>
     <% end %>
+    
+    <% if session[:deleted] %>
+      <div class="flash success">
+        <p><%= session.delete(:deleted) %></p>
+      </div>
+    <% end %>
 
     <main>
       <%= yield %>
