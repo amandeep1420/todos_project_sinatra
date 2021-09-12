@@ -8,6 +8,7 @@ require 'tilt/erubis'
 configure do
   enable :sessions
   set :session_secret, 'secret'
+  set :erb, :escape_html => true
 end
 
 # Helpers are available in both routes -and- view templates
