@@ -151,18 +151,27 @@ post '/lists/:id/delete' do
   end
 end
 
+def next_todo_id(todos)
+  max = (todos.map { |todo| todo[:id] }.max || 0)
+  max + 1
+end
+
 # Add a new todo to a todo list
 post "/lists/:list_id/todos" do
   @list_id   = params[:list_id].to_i
   @list      = load_list(@list_id)
   text       = params[:todo].strip
   error      = error_for_todo(text)
+  todos      = @list[:todos]
   
   if error
     session[:error] = error
     erb :list, layout: :layout
   else
-    @list[:todos] << {name: text, completed: false}
+    
+    id = next_todo_id(todos)
+    todos << {id: id, name: text, completed: false}
+    
     session[:success] = 'The todo was added.'
     redirect "/lists/#{@list_id}"
   end
@@ -172,10 +181,9 @@ end
 post "/lists/:list_id/todos/:todo_id/delete" do
   @list_id = params[:list_id].to_i
   @list    = load_list(@list_id)
-  todos    = @list[:todos]
   todo_id  = params[:todo_id].to_i
   
-  todos.delete_at(todo_id)
+  @list.reject! { |todo| todo[:id] == params[todo_id].to_i }
   
   if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
     status 204
@@ -193,7 +201,9 @@ post "/lists/:list_id/todos/:todo_id" do
   todo_id      = params[:todo_id].to_i
   is_completed = (params[:completed] == "true")
   
-  todos[todo_id][:completed] = is_completed
+  todo = todos.find { |todo| todo[:id] == todo_id }
+  todo[:completed] = is_completed
+  
   session[:success]          = "The todo has been updated."
   redirect "/lists/#{@list_id}"
 end
