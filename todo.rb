@@ -147,9 +147,8 @@ post '/lists/:id/delete' do
     "/lists"
   else
     session[:deleted] = "The list has been deleted."
+    redirect "/lists"
   end
-  
-  redirect "/lists"
 end
 
 # Add a new todo to a todo list
