@@ -6,9 +6,14 @@ $(function() {
     
     var ok = confirm("This cannot be undone - click OK to confirm deletion.");
     if (ok) { 
-      this.submit();
+      
+      var form = $(this);
+      
+      $.ajax({
+        url: form.attr("action"),
+        method: form.attr("method"),
+      });
     }
-    
   });
   
 });
